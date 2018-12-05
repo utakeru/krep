@@ -1,0 +1,7 @@
+node_modules
+build
+secrets.*.js
+*.crx
+*.pem
+.DS_Store
+*.zip
