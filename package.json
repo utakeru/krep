@@ -1,9 +1,9 @@
 {
   "name": "krep",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "",
   "scripts": {
-    "build": "node utils/build.js",
+    "build": "node utils/build.js && cp src/img/krep-icon128.png build/",
     "start": "node utils/webserver.js"
   },
   "devDependencies": {
