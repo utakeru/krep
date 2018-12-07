@@ -23,7 +23,17 @@
       aTag.innerHTML = "&gt;&gt;&nbsp;";
       aTag.className = "reply-link-button";
       editorField.innerHTML = (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + aTag.outerHTML;
+      moveCursorToEnd(editorField);
     });
+  }
+
+  function moveCursorToEnd(node) {
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    range.collapse(false);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
   function getComment(link, parentPost) {
