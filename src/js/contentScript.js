@@ -20,10 +20,10 @@
       const editorField = editorSrc.querySelector('.ocean-ui-editor-field');
       const aTag = document.createElement('a');
       aTag.href = href;
-      aTag.innerHTML = "&gt;&gt;&nbsp;";
+      aTag.innerHTML = "💬&nbsp;";
       aTag.className = "reply-link-button";
-      editorField.innerHTML = (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + aTag.outerHTML;
-      moveCursorToEnd(editorField);
+      const emptySpan = document.createElement('span');
+      editorField.innerHTML = aTag.outerHTML + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + "<br>";
     });
   }
 
