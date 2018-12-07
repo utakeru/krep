@@ -24,6 +24,7 @@
       aTag.className = "reply-link-button";
       const emptySpan = document.createElement('span');
       editorField.innerHTML = aTag.outerHTML + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + "<br>";
+      moveCursorToEnd(editorField);
     });
   }
 
