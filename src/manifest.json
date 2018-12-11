@@ -1,6 +1,6 @@
 {
   "name": "krep",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "content_scripts": [
     {
       "all_frames": true,
