@@ -73,11 +73,76 @@
     });
   }
 
-  let oceanBodyDivObserver;
+  function observerCommentComponent() {
+    for(let reply of document.querySelectorAll('.user-token-reply-link-button')) {
+      handleReply(reply);
+    }
+    // 既にあるポストに対して返信EventHandlerと監視を付与
+    for(let post of document.querySelectorAll('.ocean-ui-comments-post')) {
+      // 返信ボタンを押されたときのEventをhandlerを付与
+      makeReplyLink(post, post);
+      // ポストにコメント追加を監視するObserverを付与
+      new MutationObserver((postComponentMutations, postComponentObserver) => {
+        postComponentMutations.forEach((postComponentMutation) => {
+          postComponentMutation.addedNodes.forEach((commentNode) => {
+            makeReplyLink(commentNode, post);
+            const reply = commentNode.querySelector('.user-token-reply-link-button');
+            if(reply) {
+              handleReply(reply, post);
+            }
+          })
+        });
+      }).observe(post.querySelector('.ocean-ui-comments-post-commentholder'), {
+        childList: true, characterData: true
+      });
+      for(let comment of post.querySelectorAll('.ocean-ui-comments-comment')) {
+        makeReplyLink(comment, post);
+        const reply = comment.querySelector('.user-token-reply-link-button');
+        if(reply) {
+          handleReply(reply, post);
+        }
+      }
+    }
+    // ポスト追加を監視
+    new MutationObserver((commentComponentMutations) => {
+      commentComponentMutations.forEach((commentComponentMutation) => {
+        commentComponentMutation.addedNodes.forEach((postNode) => {
+          makeReplyLink(postNode, postNode);
+          // Listenerを付与
+          for(let comment of postNode.querySelectorAll('.ocean-ui-comments-comment')) {
+            makeReplyLink(comment, postNode);
+            const reply = comment.querySelector('.user-token-reply-link-button');
+            if(reply) {
+              handleReply(reply, postNode);
+            }
+          }
 
+          // コメント追加を監視
+          new MutationObserver((postComponentMutations, postComponentObserver) => {
+            postComponentMutations.forEach((postComponentMutation) => {
+              postComponentMutation.addedNodes.forEach((commentNode) => {
+                makeReplyLink(commentNode, postNode);
+                const reply = commentNode.querySelector('.user-token-reply-link-button');
+                if(reply) {
+                  handleReply(reply);
+                }
+              });
+            })
+          }).observe(postNode.querySelector('.ocean-ui-comments-post-commentholder'), {
+            childList: true, characterData: true
+          });
+        });
+      });
+    }).observe(document.querySelector('.ocean-ui-comments-commentcomponent'), {
+      childList: true, characterData: true
+    });
+  }
+
+  let oceanBodyDivObserver;
+  let oceanBodyObserver;
   if(document.querySelector('#contents-body-ocean')) {
     // ocean-contents-bodyをobserveし、divでsubtreeに対して、comment-componentをobserveする
-    new MutationObserver((oceanBodyMutations) => {
+    oceanBodyObserver = new MutationObserver((oceanBodyMutations) => {
       oceanBodyMutations.forEach((oceanBodyMutation) => {
         if(oceanBodyMutation.addedNodes && oceanBodyMutation.addedNodes.length > 0) {
           // ocean-contents-bodyの子Divを監視
@@ -86,69 +151,34 @@
               if(!document.querySelector('.ocean-ui-comments-commentcomponent')) {
                 return;
               }
-              for(let reply of document.querySelectorAll('.user-token-reply-link-button')) {
-                handleReply(reply);
-              }
-              // 既にあるポストに対して返信EventHandlerと監視を付与
-              for(let post of document.querySelectorAll('.ocean-ui-comments-post')) {
-                // 返信ボタンを押されたときのEventをhandlerを付与
-                makeReplyLink(post, post);
-                // ポストにコメント追加を監視するObserverを付与
-                new MutationObserver((postComponentMutations, postComponentObserver) => {
-                  postComponentMutations.forEach((postComponentMutation) => {
-                    postComponentMutation.addedNodes.forEach((commentNode) => {
-                      makeReplyLink(commentNode, post);
-                      const reply = commentNode.querySelector('.user-token-reply-link-button');
-                      if(reply) {
-                        handleReply(reply, post);
-                      }
-                    })
-                  });
-                }).observe(post.querySelector('.ocean-ui-comments-post-commentholder'), {
-                  childList: true, characterData: true
-                });
-                for(let comment of post.querySelectorAll('.ocean-ui-comments-comment')) {
-                  makeReplyLink(comment, post);
-                  const reply = comment.querySelector('.user-token-reply-link-button');
-                  if(reply) {
-                    handleReply(reply, post);
-                  }
-                }
-              }
-              // ポスト追加を監視
-              new MutationObserver((commentComponentMutations) => {
-                commentComponentMutations.forEach((commentComponentMutation) => {
-                  commentComponentMutation.addedNodes.forEach((postNode) => {
-                    makeReplyLink(postNode, postNode);
-                    // Listenerを付与
-                    for(let comment of postNode.querySelectorAll('.ocean-ui-comments-comment')) {
-                      makeReplyLink(comment, postNode);
-                      const reply = comment.querySelector('.user-token-reply-link-button');
-                      if(reply) {
-                        handleReply(reply, postNode);
-                      }
-                    }
 
-                    // コメント追加を監視
-                    new MutationObserver((postComponentMutations, postComponentObserver) => {
-                      postComponentMutations.forEach((postComponentMutation) => {
-                        postComponentMutation.addedNodes.forEach((commentNode) => {
-                          makeReplyLink(commentNode, postNode);
-                          const reply = commentNode.querySelector('.user-token-reply-link-button');
-                          if(reply) {
-                            handleReply(reply);
+              if(document.querySelector('.gaia-argoui-ntf-twopane-contents')) {
+                new MutationObserver((twopaneContentsMutations) => {
+                  twopaneContentsMutations.forEach((twopaneContentsMutation) => {
+                    let twopaneContentsDivObserver;
+                    if(twopaneContentsMutation.addedNodes && twopaneContentsMutation.addedNodes.length > 0) {
+                      twopaneContentsDivObserver = new MutationObserver((twopaneContentsDivMutations) => {
+                        twopaneContentsDivMutations.some((twopaneContentsMutation) => {
+                          if(!document.querySelector('.ocean-ui-comments-commentcomponent')) {
+                            return;
                           }
-                        });
-                      })
-                    }).observe(postNode.querySelector('.ocean-ui-comments-post-commentholder'), {
-                      childList: true, characterData: true
-                    });
-                  });
-                });
-              }).observe(document.querySelector('.ocean-ui-comments-commentcomponent'), {
-                childList: true, characterData: true
-              });
 
+                          observerCommentComponent();
+                          twopaneContentsDivObserver.disconnect();
+                          return true;
+                        });
+                      });
+                      twopaneContentsDivObserver.observe(document.querySelector('.gaia-argoui-ntf-twopane-contents div'), {
+                        childList: true, subtree: true
+                      });
+                    }
+                  });
+                }).observe(document.querySelector('.gaia-argoui-ntf-twopane-contents'), {
+                  childList: true
+                });
+              }
+
+              observerCommentComponent();
               oceanBodyDivObserver.disconnect();
               return true;
             });
@@ -158,7 +188,8 @@
           })
         }
       })
-    }).observe(document.querySelector('#contents-body-ocean'), {
+    });
+    oceanBodyObserver.observe(document.querySelector('#contents-body-ocean'), {
       childList: true
     });
   }
