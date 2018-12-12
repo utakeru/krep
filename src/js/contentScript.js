@@ -20,10 +20,10 @@
       const editorField = editorSrc.querySelector('.ocean-ui-editor-field');
       const aTag = document.createElement('a');
       aTag.href = href;
-      aTag.innerHTML = "💬&nbsp;";
+      aTag.innerHTML = "💬";
       aTag.className = "reply-link-button";
       const emptySpan = document.createElement('span');
-      editorField.innerHTML = aTag.outerHTML + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + "<br>";
+      editorField.innerHTML = aTag.outerHTML + "&nbsp;" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + "<br>";
       moveCursorToEnd(editorField);
     });
   }
@@ -41,7 +41,7 @@
     const comment = linkToComment[link];
     if(comment) {
       return comment
-    } else if(parentPost) {
+    } else if(parentPost && document.querySelector('.ocean-ui-comments-post-morecomment').style.display !== "none") {
       const popupEl = document.querySelector('.krep-popup');
       popupEl.style.display = 'none';
       if(window.confirm('コメントが見つかりません。古いコメントを展開しますか？')){
