@@ -35,6 +35,24 @@
     visibility: visible;
 }
 
+.ocean-ui-comments-commentbase-entity {
+  .ocean-ui-comments-commentbase-krep {
+    margin-left: 16px;
+    white-space: nowrap;
+    color: #6f6f6f;
+    opacity: 0;
+  }
+  &:hover .ocean-ui-comments-commentbase-krep {
+    margin-left: 16px;
+    white-space: nowrap;
+    opacity: 1;
+  }
+}
+
+.ocean-ui-comments-commentbase-krep {
+  transition: opacity .5s;
+}
+
 .krep-popup {
   background-color: rgb(255, 255, 255);
   padding: 20px 20px 20px 80px;
