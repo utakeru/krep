@@ -103,6 +103,7 @@
       // 返信ボタンを押されたときのEventをhandlerを付与
       makeReplyLink(post, post);
       // ポストにコメント追加を監視するObserverを付与
+      if(!post.querySelector('.ocean-ui-comments-post-commentholder')) continue;
       new MutationObserver((postComponentMutations, postComponentObserver) => {
         postComponentMutations.forEach((postComponentMutation) => {
           postComponentMutation.addedNodes.forEach((commentNode) => {
