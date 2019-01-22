@@ -39,10 +39,12 @@
       aTag.innerHTML = "💬";
       aTag.className = "reply-link-button";
       const emptySpan = document.createElement('span');
-      editorField.innerHTML = aTag.outerHTML + "<span>&nbsp;</span>" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML) + "<br>";
+      editorField.innerHTML = aTag.outerHTML + "<span>&nbsp;</span>" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML);
       moveCursorToEnd(editorField);
     });
-    actionsRoot.appendChild(krepActionEl);
+    if(!actionsRoot.querySelector('.ocean-ui-comments-commentbase-krep')) {
+      actionsRoot.appendChild(krepActionEl);
+    }
   };
 
   const moveCursorToEnd = (node) => {
