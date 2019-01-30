@@ -1,6 +1,8 @@
 'use strict';
 {
+  // 投稿日時からコメントの内容を取得するためのオブジェクト
   const linkToComment = {};
+
   // Popup要素をbodyに追加
   const popupEl = document.createElement('div');
   popupEl.className = 'krep-popup';
@@ -25,18 +27,23 @@
     const actionsRoot = src.querySelector('.ocean-ui-comments-commentbase-actions');
     const krepActionEl = makeKrepActionEl();
 
-    const reply = src.querySelector('.ocean-ui-comments-commentbase-comment');
     const replyUser = src.querySelector('.ocean-ui-comments-commentbase-name').innerText;
     const replyUserIcon = src.querySelector('.ocean-ui-comments-commentbase-usericon');
     const content = src.querySelector('.ocean-ui-comments-commentbase-contents').innerHTML;
     const href = src.querySelector('.ocean-ui-comments-commentbase-time a').attributes['href'].value;
+    // ポップアップで送信者アイコン、送信者名、コメント内容を表示する
     linkToComment[href] = replyUserIcon.outerHTML + replyUser + content;
+
     krepActionEl.addEventListener("click", () => {
+      const reply = src.querySelector('.ocean-ui-comments-commentbase-comment');
       reply.click();
       const editorField = editorSrc.querySelector('.ocean-ui-editor-field');
       const aTag = document.createElement('a');
+
       aTag.href = href;
       aTag.innerHTML = "💬";
+      // リッチエディタにclass名を付与して送信すると「user-token」のprefixが付くので
+      // 送信後のclass名は「user-token-reply-link-button」になる
       aTag.className = "reply-link-button";
       const emptySpan = document.createElement('span');
       editorField.innerHTML = aTag.outerHTML + "<span>&nbsp;</span>" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML);
@@ -56,6 +63,7 @@
     selection.addRange(range);
   };
 
+  // コメントリンクから内容を取得する。取得出来なかった場合は、古いコメントを展開する旨のダイアログを表示
   const getComment = (link, parentPost) => {
     const comment = linkToComment[link];
     if(comment) {
@@ -82,7 +90,7 @@
     popupEl.innerHTML = content;
   };
 
-  const handleReply = (reply, post) => {
+  const handlePopupShow = (reply, post) => {
     reply.addEventListener("mouseover", (e) => {
       if(post) {
         popupSetup(e, getComment(e.target.href, post));
@@ -98,32 +106,33 @@
 
   const observerCommentComponent = () => {
     for(let reply of document.querySelectorAll('.user-token-reply-link-button')) {
-      handleReply(reply);
+      handlePopupShow(reply);
     }
-    // 既にあるポストに対して返信EventHandlerと監視を付与
+    // 既にあるポストに対してEventHandlerを付与
     for(let post of document.querySelectorAll('.ocean-ui-comments-post')) {
-      // 返信ボタンを押されたときのEventをhandlerを付与
       makeReplyLink(post, post);
-      // ポストにコメント追加を監視するObserverを付与
+
       if(!post.querySelector('.ocean-ui-comments-post-commentholder')) continue;
       new MutationObserver((postComponentMutations, postComponentObserver) => {
         postComponentMutations.forEach((postComponentMutation) => {
+          // コメントが追加されたら、コメントにEventHandlerを付与
           postComponentMutation.addedNodes.forEach((commentNode) => {
             makeReplyLink(commentNode, post);
             const reply = commentNode.querySelector('.user-token-reply-link-button');
             if(reply) {
-              handleReply(reply, post);
+              handlePopupShow(reply, post);
             }
           })
         });
       }).observe(post.querySelector('.ocean-ui-comments-post-commentholder'), {
         childList: true, characterData: true
       });
+      // 既にあるポストのコメントに対してEventHandlerを付与
       for(let comment of post.querySelectorAll('.ocean-ui-comments-comment')) {
         makeReplyLink(comment, post);
         const reply = comment.querySelector('.user-token-reply-link-button');
         if(reply) {
-          handleReply(reply, post);
+          handlePopupShow(reply, post);
         }
       }
     }
@@ -132,12 +141,11 @@
       commentComponentMutations.forEach((commentComponentMutation) => {
         commentComponentMutation.addedNodes.forEach((postNode) => {
           makeReplyLink(postNode, postNode);
-          // Listenerを付与
           for(let comment of postNode.querySelectorAll('.ocean-ui-comments-comment')) {
             makeReplyLink(comment, postNode);
             const reply = comment.querySelector('.user-token-reply-link-button');
             if(reply) {
-              handleReply(reply, postNode);
+              handlePopupShow(reply, postNode);
             }
           }
 
@@ -148,7 +156,7 @@
                 makeReplyLink(commentNode, postNode);
                 const reply = commentNode.querySelector('.user-token-reply-link-button');
                 if(reply) {
-                  handleReply(reply);
+                  handlePopupShow(reply);
                 }
               });
             })
