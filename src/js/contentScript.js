@@ -37,8 +37,9 @@
     krepActionEl.addEventListener("click", () => {
       const reply = src.querySelector('.ocean-ui-comments-commentbase-comment');
       reply.click();
-      getEditorField(editorSrc).then(editorField => {
+      getEditorField(editorSrc).then(([document, editorField]) => {
         addReplyLinkToEditorField(href, editorField);
+        moveCursorToEnd(document, editorField);
       });
     });
     if(!actionsRoot.querySelector('.ocean-ui-comments-commentbase-krep')) {
@@ -51,11 +52,12 @@
     if (editorField.tagName.toLowerCase() === 'iframe') {
       return new Promise((resolve, reject) => {
         editorField.addEventListener('load', () => {
-          resolve(editorField.contentDocument.querySelector('.editable'));
+          resolve([editorField.contentDocument,
+                   editorField.contentDocument.querySelector('.editable')]);
         }, {'once': true});
       });
     }
-    return Promise.resolve(editorField);
+    return Promise.resolve([document, editorField]);
   };
 
   const addReplyLinkToEditorField = (href, editorField) => {
@@ -68,14 +70,13 @@
     aTag.className = "reply-link-button";
     const emptySpan = document.createElement('span');
     editorField.innerHTML = aTag.outerHTML + "<span>&nbsp;</span>" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML);
-    moveCursorToEnd(editorField);
   };
 
-  const moveCursorToEnd = (node) => {
+  const moveCursorToEnd = (document, node) => {
     const range = document.createRange();
     range.selectNodeContents(node);
     range.collapse(false);
-    const selection = window.getSelection();
+    const selection = document.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
   };
