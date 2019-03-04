@@ -30,35 +30,53 @@
     const replyUser = src.querySelector('.ocean-ui-comments-commentbase-name').innerText;
     const replyUserIcon = src.querySelector('.ocean-ui-comments-commentbase-usericon');
     const content = src.querySelector('.ocean-ui-comments-commentbase-contents').innerHTML;
-    const href = src.querySelector('.ocean-ui-comments-commentbase-time a').attributes['href'].value;
     // ポップアップで送信者アイコン、送信者名、コメント内容を表示する
+    const href = src.querySelector('.ocean-ui-comments-commentbase-time a').attributes['href'].value;
     linkToComment[href] = replyUserIcon.outerHTML + replyUser + content;
 
     krepActionEl.addEventListener("click", () => {
       const reply = src.querySelector('.ocean-ui-comments-commentbase-comment');
       reply.click();
-      const editorField = editorSrc.querySelector('.ocean-ui-editor-field');
-      const aTag = document.createElement('a');
-
-      aTag.href = href;
-      aTag.innerHTML = "💬";
-      // リッチエディタにclass名を付与して送信すると「user-token」のprefixが付くので
-      // 送信後のclass名は「user-token-reply-link-button」になる
-      aTag.className = "reply-link-button";
-      const emptySpan = document.createElement('span');
-      editorField.innerHTML = aTag.outerHTML + "<span>&nbsp;</span>" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML);
-      moveCursorToEnd(editorField);
+      getEditorField(editorSrc).then(([document, editorField]) => {
+        addReplyLinkToEditorField(href, editorField);
+        moveCursorToEnd(document, editorField);
+      });
     });
     if(!actionsRoot.querySelector('.ocean-ui-comments-commentbase-krep')) {
       actionsRoot.appendChild(krepActionEl);
     }
   };
 
-  const moveCursorToEnd = (node) => {
+  const getEditorField = (editorSrc) => {
+    let editorField = editorSrc.querySelector('.ocean-ui-editor-field');
+    if (editorField.tagName.toLowerCase() === 'iframe') {
+      return new Promise((resolve, reject) => {
+        editorField.addEventListener('load', () => {
+          resolve([editorField.contentDocument,
+                   editorField.contentDocument.querySelector('.editable')]);
+        }, {'once': true});
+      });
+    }
+    return Promise.resolve([document, editorField]);
+  };
+
+  const addReplyLinkToEditorField = (href, editorField) => {
+    const aTag = document.createElement('a');
+
+    aTag.href = href;
+    aTag.innerHTML = "💬";
+    // リッチエディタにclass名を付与して送信すると「user-token」のprefixが付くので
+    // 送信後のclass名は「user-token-reply-link-button」になる
+    aTag.className = "reply-link-button";
+    const emptySpan = document.createElement('span');
+    editorField.innerHTML = aTag.outerHTML + "<span>&nbsp;</span>" + (editorField.innerHTML === "<br>" ? "" : editorField.innerHTML);
+  };
+
+  const moveCursorToEnd = (document, node) => {
     const range = document.createRange();
     range.selectNodeContents(node);
     range.collapse(false);
-    const selection = window.getSelection();
+    const selection = document.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
   };
