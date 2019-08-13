@@ -35,16 +35,16 @@
     visibility: visible;
 }
 
+.ocean-ui-comments-commentbase-delete {
+  margin-right: 16px;
+}
 .ocean-ui-comments-commentbase-body {
   .ocean-ui-comments-commentbase-krep {
-    margin-left: 16px;
     white-space: nowrap;
     color: #6f6f6f;
     opacity: 0;
   }
   &:hover .ocean-ui-comments-commentbase-krep {
-    margin-left: 16px;
-    white-space: nowrap;
     opacity: 1;
   }
 }
