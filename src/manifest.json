@@ -1,12 +1,12 @@
 {
   "name": "krep",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "content_scripts": [
     {
       "all_frames": true,
       "matches": [
-        "https://*.cybozu.com/*",
-        "https://*.cybozu-dev.com/*"
+        "https://*.cybozu.com/k/*",
+        "https://*.cybozu-dev.com/k/*"
       ],
       "js": [
         "main.bundle.js"

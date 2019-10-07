@@ -1,6 +1,6 @@
 {
   "name": "krep",
-  "version": "0.0.13",
+  "version": "0.0.16",
   "description": "",
   "scripts": {
     "build": "node utils/build.js && cp src/img/krep-icon128.png build/",
@@ -20,7 +20,7 @@
     "write-file-webpack-plugin": "^4.5.0"
   },
   "dependencies": {
-    "node-sass": "^4.10.0",
+    "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0"
   }
 }
