@@ -6,7 +6,9 @@
       "all_frames": true,
       "matches": [
         "https://*.cybozu.com/k/*",
-        "https://*.cybozu-dev.com/k/*"
+        "https://*.cybozu-dev.com/k/*",
+        "https://*.kintone.com/k/*",
+        "https://*.kintone-dev.com/k/*"
       ],
       "js": [
         "main.bundle.js"
