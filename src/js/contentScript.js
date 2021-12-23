@@ -11,6 +11,10 @@
   popupEl.style.display = 'none';
   document.querySelector('body').appendChild(popupEl);
 
+  const normalizeLink = (url) => {
+    return url.replace(/^(https:\/\/\w+)\.s\./, '$1.');
+  }
+
   const makeKrepActionEl = () => {
     const krepActionEl = document.createElement('li');
 
@@ -110,10 +114,11 @@
 
   const handlePopupShow = (reply, post) => {
     reply.addEventListener("mouseover", (e) => {
+      const normalizedLink = normalizeLink(e.target.href);
       if(post) {
-        popupSetup(e, getComment(e.target.href, post));
+        popupSetup(e, getComment(normalizedLink, post));
       } else {
-        popupSetup(e, getComment(e.target.href));
+        popupSetup(e, getComment(normalizedLink));
       }
     });
     reply.addEventListener("mouseout", (e) => {
