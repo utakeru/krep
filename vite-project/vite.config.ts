@@ -15,8 +15,8 @@ const manifest = defineManifest({
                 "https://*.kintone.com/k/*",
                 "https://*.kintone-dev.com/k/*"
             ],
-            js: [ "src/js/contentScript.js" ],
-            run_at: "document_end"
+            js: [ "src/js/contentScript.ts" ],
+            run_at: "document_start"
         }
     ]
 });
@@ -25,7 +25,7 @@ export default defineConfig({
     plugins: [crx({ manifest })],
     build: {
         rollupOptions: {
-            input: ["src/js/contentScript.js"],
+            input: ["src/js/contentScript.ts"],
             output: {
             chunkFileNames: "[name].[hash].js",
             assetFileNames: "[name].[hash].[ext]",
