@@ -6,6 +6,9 @@ const manifest = defineManifest({
     name: "krep",
     version: "1.0.0",
     permissions: [],
+    icons: {
+        "128": "krep-icon128.png"
+    },
     content_scripts: [
         {
             "all_frames": true,
