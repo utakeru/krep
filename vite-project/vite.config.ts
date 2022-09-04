@@ -15,7 +15,7 @@ const manifest = defineManifest({
                 "https://*.kintone.com/k/*",
                 "https://*.kintone-dev.com/k/*"
             ],
-            js: [ "dist/contentScript.js" ],
+            js: [ "src/js/contentScript.js" ],
             run_at: "document_end"
         }
     ]
