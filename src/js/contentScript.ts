@@ -2,7 +2,6 @@ export {};
 import '../css/contentScript.scss';
 
 (() => {
-  console.log("loaded");
   // 投稿日時からコメントの内容を取得するためのオブジェクト
   const linkToComment: {[key: string]: string} = {};
 
@@ -266,4 +265,9 @@ import '../css/contentScript.scss';
       childList: true
     });
   }
+  
+  window.addEventListener('hashchange', () => {
+    debugger;
+    observerCommentComponent();
+  })
 })();
