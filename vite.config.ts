@@ -19,7 +19,6 @@ const manifest = defineManifest({
                 "https://*.kintone-dev.com/k/*"
             ],
             js: [ "src/js/contentScript.ts" ],
-            run_at: "document_start"
         }
     ]
 });

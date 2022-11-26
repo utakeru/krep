@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "krep",
+  "version": "1.0.0",
+  "permissions": [],
+  "icons": {
+    "128": "krep-icon128.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "content-script-loader.contentScript.ts.bc34e344.js"
+      ],
+      "all_frames": true,
+      "matches": [
+        "https://*.cybozu.com/k/*",
+        "https://*.cybozu-dev.com/k/*",
+        "https://*.kintone.com/k/*",
+        "https://*.kintone-dev.com/k/*"
+      ],
+      "css": [
+        "contentScript.834f5b36.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "https://*.cybozu-dev.com/*",
+        "https://*.cybozu.com/*",
+        "https://*.kintone-dev.com/*",
+        "https://*.kintone.com/*"
+      ],
+      "resources": [
+        "contentScript.ts.js"
+      ],
+      "use_dynamic_url": true
+    }
+  ]
+}
