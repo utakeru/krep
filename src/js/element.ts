@@ -36,17 +36,16 @@ const makeReplyLinkAndAppendToRoot = (src: HTMLElement, editorSrc: HTMLElement, 
 
   const href = src.querySelector('.ocean-ui-comments-commentbase-time a')?.attributes.getNamedItem('href')?.value;
   krepActionEl.addEventListener("click", () => clickHandler(src, editorSrc, href!));
-  if(!actionsRoot.querySelector('.ocean-ui-comments-commentbase-krep')) {
+  if (!actionsRoot.querySelector('.ocean-ui-comments-commentbase-krep')) {
     actionsRoot.appendChild(krepActionEl);
   }
 };
 
 // コメントリンクから内容を取得する。取得出来なかった場合は、古いコメントを展開する旨のダイアログを表示
 const getComment = (comment: string | undefined, parentPost: HTMLElement | undefined): string | null => {
-  console.log({comment, parentPost})
-  if(comment) {
+  if (comment) {
     return comment
-  } else if(parentPost) {
+  } else if (parentPost) {
     const moreCommentEl = parentPost.querySelector('.ocean-ui-comments-post-morecomment') as HTMLElement;
     if (!moreCommentEl) {
       return null;
@@ -54,7 +53,7 @@ const getComment = (comment: string | undefined, parentPost: HTMLElement | undef
     if (moreCommentEl.style.display !== "none") {
       const popupEl = document.querySelector('.krep-popup') as HTMLElement;
       popupEl.style.display = 'none';
-      if(window.confirm('コメントが見つかりません。古いコメントを展開しますか？')){
+      if (window.confirm('コメントが見つかりません。古いコメントを展開しますか？')) {
         moreCommentEl.click();
       }
     } else {
@@ -71,8 +70,8 @@ const getEditorField = (editorSrc: HTMLElement): Promise<[Document, HTMLElement]
     return new Promise((resolve) => {
       editorField.addEventListener('load', () => {
         resolve([editorField.ownerDocument,
-                 editorField.ownerDocument.querySelector('.editable') as HTMLElement]);
-      }, {'once': true});
+        editorField.ownerDocument.querySelector('.editable') as HTMLElement]);
+      }, { 'once': true });
     });
   }
   return Promise.resolve([document, editorField]);

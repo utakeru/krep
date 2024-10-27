@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 const manifest = defineManifest({
     manifest_version: 3,
     name: "krep",
-    version: "1.0.0",
+    version: "1.1.0",
     permissions: [],
     icons: {
         "128": "krep-icon128.png"
@@ -18,21 +18,21 @@ const manifest = defineManifest({
                 "https://*.kintone.com/k/*",
                 "https://*.kintone-dev.com/k/*"
             ],
-            js: [ "src/js/contentScript.ts" ],
+            js: ["src/js/contentScript.ts"],
         }
     ]
 });
-  
+
 export default defineConfig({
     plugins: [crx({ manifest })],
     build: {
         rollupOptions: {
             input: ["src/js/contentScript.ts"],
             output: {
-            chunkFileNames: "[name].[hash].js",
-            assetFileNames: "[name].[hash].[ext]",
-            entryFileNames: "[name].js",
-            dir: "dist",
+                chunkFileNames: "[name].[hash].js",
+                assetFileNames: "[name].[hash].[ext]",
+                entryFileNames: "[name].js",
+                dir: "dist",
             }
         },
     },

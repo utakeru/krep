@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postbuild": "node ./scripts/set-dynamic-url-patch.cjs",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.14",
     "@types/chrome": "^0.0.197",
+    "patch-package": "^8.0.0",
     "sass": "^1.54.8",
     "typescript": "^4.6.4",
     "vite": "^3.0.7"
